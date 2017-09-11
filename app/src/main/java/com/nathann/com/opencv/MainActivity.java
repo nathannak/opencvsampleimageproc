@@ -100,48 +100,54 @@ public class MainActivity extends Activity {
                         switch (ACTION_MODE){
                             case HomeActivity.GAUSSIAN_BLUR:
                                 // original values:  new Size(3,3) and 0
-                                // the way t si is very resource consuming but effective
-                                Imgproc.GaussianBlur(src, src,new Size(35,35),15,15,0);
+                                // 35,35 is very resource consuming but effective.
+                                Imgproc.GaussianBlur(src, src,new Size(15,15),15,15,0);
                                 break;
                             case HomeActivity.MEAN_BLUR:
-                                Imgproc.blur(src, src, new Size(3,3));
+
+                                // original 3,3 -  13,13 not bad too
+                                Imgproc.blur(src, src, new Size(15,15));
                                 break;
                             case HomeActivity.MEDIAN_BLUR:
                                 Imgproc.medianBlur(src, src, 3);
                                 break;
                             case HomeActivity.SHARPEN:
 
-                                //original value 3,3 changed to 5,5 and higher without useful info
+                                  //if there are too much white pixels in he image then i have to use weaker algorithm
 
-                                //Mat kernel = new Mat(3,3,CvType.CV_32F);
+//                                MatOfInt kernel = new MatOfInt(-1,-1,-1,-1,9,-1,-1,-1,-1);
+//
+//                                // this one sucks
+//                                //MatOfInt kernel = new MatOfInt (-1,-1,-1,-1,-1,-1,2,2,2,-1,-1,2,8,2,-1,-1,2,2,2,-1,-1,-1,-1,-1,-1);
+//
+//                                // this one sucks too not as much as the previous one
+//                                //MatOfInt kernel = new MatOfInt(1,1,1,1,-7,1,1,1,1);
+//
+//
+//                                //filter2D(src, dst, depth , kernel, anchor, delta, BORDER_DEFAULT );
+//
+//                                Point anchor = new Point( -1, -1 );
+//                                double delta = 0;
+//
+//                                //sharpening is strong so  i do GB before sharpening
+//                                Imgproc.GaussianBlur(src, src,new Size(3,3),15,15,0);
+//                                Imgproc.filter2D(src, src, src.depth(), kernel , anchor , delta, Imgproc.BORDER_DEFAULT  );
 
-                                MatOfInt kernel = new MatOfInt(-1,-1,-1,-1,9,-1,-1,-1,-1);
 
-                                // this one sucks
-                                //MatOfInt kernel = new MatOfInt (-1,-1,-1,-1,-1,-1,2,2,2,-1,-1,2,8,2,-1,-1,2,2,2,-1,-1,-1,-1,-1,-1);
+                                 // weaker algorithm
 
-                                //this one sucks too not as much as the previous one
-                                //MatOfInt kernel = new MatOfInt(1,1,1,1,-7,1,1,1,1);
-
-                                //int[] values = {0, -1, 0, -1, 5, -1, 0, -1, 0};
-
-                                //relatively ok, mostly ineffective
+                                // relatively ok, mostly ineffective
                                 //kernel.put(0, 0, 0, -1, 0, -1, 5, -1, 0, -1, 0);
-
-                                //ultra strong
+                                // ultra strong
                                 //kernel.put(0, 0, 0, -5, 0, -5, 25, -5, 0, -5, 0);
 
-                                //does not print the image
-                                //kernel.put( 0 , 0 , 0 , -3 , 0 , -3 , 7.5 , -3 , 0 , -3 , 0 );
+                                 // does not print the image
+                                 //kernel.put( 0 , 0 , 0 , -3 , 0 , -3 , 7.5 , -3 , 0 , -3 , 0 );
 
-                                //filter2D(src, dst, depth , kernel, anchor, delta, BORDER_DEFAULT );
-
-                                Point anchor = new Point( -1, -1 );
-                                double delta = 0;
-
-                                //sharpening is strong so  i do GB before sharpening
-                                Imgproc.GaussianBlur(src, src,new Size(3,3),15,15,0);
-                                Imgproc.filter2D(src, src, src.depth(), kernel , anchor , delta, Imgproc.BORDER_DEFAULT  );
+                                 Mat kernel = new Mat(3,3,CvType.CV_32F);
+                                 kernel.put(0, 0, 0, -1, 0, -1, 5, -1, 0, -1, 0);
+                                 Imgproc.filter2D(src, src, src.depth(), kernel);
+                                 //
 
                                 break;
                             case HomeActivity.DILATE:
